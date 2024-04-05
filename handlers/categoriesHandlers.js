@@ -19,7 +19,8 @@ const getCategories = async (req, res) => {
 
   try {
     const query = { role: 'Category' }
-    const categories = await db.collection('Categories').find(query).toArray()
+    const categories = await db.collection('Categories').find().toArray()
+    // const categories = await db.collection('Categories').find(query).toArray()
     return res.json({ data: categories, message: 'success' })
   } catch (err) {
     console.error(err)
