@@ -55,7 +55,9 @@ const addEnrollmentToCourse = async (req, res) => {
 }
 
 // update enrollment for a course
-const updateEnrollmentToCourse = async (req, res) => {}
+const updateEnrollmentToCourse = async (req, res) => {
+  //asdfad
+}
 
 // get all enrollment for a course
 const getEnrollmentsByCourseId = async (req, res) => {}
