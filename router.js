@@ -69,6 +69,14 @@ const { authMiddleware } = require('./handlers/Auth/authMiddleware')
 
 // Course categories endpoints
 //------------------------------------
+const {
+  getCategories,
+  getCategoryById,
+  postCategory,
+  putCategory,
+  deleteCategory,
+} = require('./handlers/categoriesHandlers')
+
 router.get('/api/categories', getCategories)
 router.get('/api/category/:id', getCategoryById)
 router.post('/api/categorY', postCategory)
