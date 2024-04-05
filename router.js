@@ -13,8 +13,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-const { authLogIn, registereUser } = require('./handlers/Auth/authHandler')
-const { authMiddleware } = require('./handlers/Auth/authMiddleware')
+// const { authLogIn, registereUser } = require('./handlers/Auth/authHandler')
+// const { authMiddleware } = require('./handlers/Auth/authMiddleware')
 
 //- Categories.
 //- Products.
@@ -87,8 +87,8 @@ router.delete('/api/categories/:id', deleteCategory)
 
 // user management endpoints
 //------------------------------------
-router.get('/api/users', getUsers)
-router.get('/api/users/:id', getUsersById)
+// router.get('/api/users', getUsers)
+// router.get('/api/users/:id', getUsersById)
 // router.put('/api/users/:id', putUser)  - Not used. for After the course
 // router.delete('/api/users/:id', deleteUser) - Not used. for After the course
 
@@ -98,29 +98,29 @@ router.get('/api/users/:id', getUsersById)
 
 //#region  jwt login & Auth
 //------------------------------------
-router.post('/api/auth/login', authLogIn)
-router.post('/api/auth/register', registereUser)
+// router.post('/api/auth/login', authLogIn)
+// router.post('/api/auth/register', registereUser)
 
     //#region Protected routs
-    router.get('/api/students', authMiddleware, (req, res) => {
-      if (req.user.role !== 'student') {
-        return res.status(403).send('Forbidden.')
-      }
+    // router.get('/api/students', authMiddleware, (req, res) => {
+    //   if (req.user.role !== 'student') {
+    //     return res.status(403).send('Forbidden.')
+    //   }
 
-      // Return student data
-      res.status(200).json({ name: 'John Doe', roll: '123456' })
-    })
+    //   // Return student data
+    //   res.status(200).json({ name: 'John Doe', roll: '123456' })
+    // })
 
-    router.get('/api/instructors', authMiddleware, (req, res) => {
-      console.log('000000000000000000000000000000')
+    // router.get('/api/instructors', authMiddleware, (req, res) => {
+    //   console.log('000000000000000000000000000000')
 
-      if (req.user.role !== 'instructor') {
-        return res.status(403).send('Forbidden.')
-      }
+    //   if (req.user.role !== 'instructor') {
+    //     return res.status(403).send('Forbidden.')
+    //   }
 
-      // Return instructor data
-      res.status(200).json({ name: 'Hammad', courses: [''] })
-    })
+    //   // Return instructor data
+    //   res.status(200).json({ name: 'Hammad', courses: [''] })
+    // })
  //#endregion
 
  //#endregion
