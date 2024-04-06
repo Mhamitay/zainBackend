@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+//#region OldCode
 // const { authLogIn, registereUser } = require('./handlers/Auth/authHandler')
 // const { authMiddleware } = require('./handlers/Auth/authMiddleware')
 
@@ -58,6 +59,7 @@ const upload = multer({ storage: storage })
 //   getStudentForCourse,
 // } = require('./handlers/Users')
 ////////////////////////////////////////////////////////////////////
+//#endregion
 
 //GET/LIST
 //GET
@@ -67,6 +69,26 @@ const upload = multer({ storage: storage })
 
 //#region EndPoints ..
 
+//#region cach
+// Course cach endpoints
+//------------------------------------
+const {
+  getCach,
+  getCachById,
+  postCach,
+  putCach,
+  deleteCach,
+} = require('./handlers/cachHandlers')
+
+router.get('/api/cach', getCach)
+router.get('/api/cach/:id', getCachById)
+router.post('/api/cach', postCach)
+router.put('/api/cach/:id', putCach)
+router.delete('/api/cach/:id', deleteCach)
+//------------------------------------
+//#endregion
+
+//#region categories
 // Course categories endpoints
 //------------------------------------
 const {
@@ -84,17 +106,7 @@ router.put('/api/category/:id', putCategory)
 router.delete('/api/categories/:id', deleteCategory)
 //router.post('/category', upload.single('file'), postCategory)
 //router.patch('/api/courses/:id', upload.single('file'), putcategory)
-
-// user management endpoints
-//------------------------------------
-// router.get('/api/users', getUsers)
-// router.get('/api/users/:id', getUsersById)
-// router.put('/api/users/:id', putUser)  - Not used. for After the course
-// router.delete('/api/users/:id', deleteUser) - Not used. for After the course
-
 //#endregion
-
-
 
 //#region  jwt login & Auth
 //------------------------------------
@@ -124,5 +136,13 @@ router.delete('/api/categories/:id', deleteCategory)
  //#endregion
 
  //#endregion
+//#endregion
 
 module.exports = router
+
+// user management endpoints
+//------------------------------------
+// router.get('/api/users', getUsers)
+// router.get('/api/users/:id', getUsersById)
+// router.put('/api/users/:id', putUser)  - Not used. for After the course
+// router.delete('/api/users/:id', deleteUser) - Not used. for After the course
