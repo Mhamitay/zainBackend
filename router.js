@@ -13,64 +13,29 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-//#region OldCode
-// const { authLogIn, registereUser } = require('./handlers/Auth/authHandler')
-// const { authMiddleware } = require('./handlers/Auth/authMiddleware')
-
-//- Categories.
-//- Products.
-//- MostOrderd.
-//- Cart.
-//- PreviousOrders.
-//- Favorits.
-//- Purchase.
-///////////////////////////////////////////////
-// const {
-//   addEnrollmentToCourse,
-//   getEnrollmentsByStudentsId,
-// } = require('./handlers/Favorits')
-
-
-// const {
-//   getDivingLog,
-//   getDivingLogById,
-//   postDivingLog,
-//   putDivingLog,
-//   deleteDivingLog,
-// } = require('./handlers/MostOrderd')
-
-// const {
-//   getInstructors,
-//   postInstructor,
-//   getInstructorById,
-//   putInstructor,
-// } = require('./handlers/Cart')
-
-// const { getUsers, getUsersById } = require('./handlers/Users')
-// const { getEnvironmentData } = require('worker_threads')
-
-// const {
-//   getCourses,
-//   getCourseById,
-//   postCourses,
-//   putCourses,
-//   deleteCourses,
-//   getCoursesByInstructor,
-//   getStudentForCourse,
-// } = require('./handlers/Users')
-////////////////////////////////////////////////////////////////////
-//#endregion
-
-//GET/LIST
-//GET
-//PUT
-//POST
-//DETELE
-
 //#region EndPoints ..
 
+//#region Product
+// Product endpoints
+//------------------------------------
+const {
+  getProducts,
+  getProductById,
+  postProduct,
+  putProduct,
+  deleteProduct,
+} = require('./handlers/productHandlers')
+
+router.get('/api/product', getProducts)
+router.get('/api/product/:id', getProductById)
+router.post('/api/product', postProduct)
+router.put('/api/product/:id', putProduct)
+router.delete('/api/product/:id', deleteProduct)
+//------------------------------------
+//#endregion
+
 //#region cach
-// Course cach endpoints
+// Cach endpoints
 //------------------------------------
 const {
   getCach,
@@ -89,7 +54,7 @@ router.delete('/api/cach/:id', deleteCach)
 //#endregion
 
 //#region categories
-// Course categories endpoints
+// Categories endpoints
 //------------------------------------
 const {
   getCategories,
