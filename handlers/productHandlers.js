@@ -20,14 +20,15 @@ const getProducts = async (req, res) => {
   return res.json({ Product: allProduct, message: 'success' })
 }
 const getProductById = async (req, res) => {
-  const client = await MongoClient.connect(url)
-  const db = client.db(dbName)
+  const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
+  const db = client.db()
   const Product = await db
     .collection('Products')
     .findOne({ _id: req.params.id })
   //client.close()  // TODO- check this close function.
   return res.json(Product)
 }
+
 const postProduct = async (req, res) => {
   try {
     const client = await MongoClient.connect(
