@@ -2,17 +2,19 @@ const router = require('express').Router()
 
 const multer = require('multer')
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname)
+//   },
+// })
 
+//const upload = multer({ storage: storage })
+
+const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
-
 //#region EndPoints ..
 
 //#region Product
@@ -24,6 +26,7 @@ const {
   postProduct,
   putProduct,
   deleteProduct,
+  uploadImageToGridFS,
 } = require('./handlers/productHandlers')
 
 router.get('/api/product', getProducts)
@@ -31,6 +34,8 @@ router.get('/api/product/:id', getProductById)
 router.post('/api/product', postProduct)
 router.put('/api/product/:id', putProduct)
 router.delete('/api/product/:id', deleteProduct)
+router.post('/api/product', upload.single('image'), uploadImageToGridFS)
+
 //------------------------------------
 //#endregion
 

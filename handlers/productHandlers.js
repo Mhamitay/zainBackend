@@ -11,7 +11,44 @@ const options = {
   useUnifiedTopology: true,
 }
 
+
 const { CONNECTION_STRING_URI } = process.env.CONNECTION_STRING_Remote
+
+const uploadImageToGridFS = async (req, res) => {
+  try {
+    // Connect to MongoDB
+    const client = await MongoClient.connect(
+      process.env.CONNECTION_STRING_Remote
+    )
+    const db = client.db('zainStoreDB')
+
+    // Get the file from the request
+    const imageFile = req.file
+
+    // Create a readable stream from the uploaded file
+    const readableStream = new Readable()
+    readableStream.push(imageFile.buffer)
+    readableStream.push(null)
+
+    // Upload the file to GridFS
+    const bucket = new GridFSBucket(db)
+    const uploadStream = bucket.openUploadStream(imageFile.originalname)
+    readableStream.pipe(uploadStream)
+
+    uploadStream.on('error', (error) => {
+      console.error('Error uploading file:', error)
+      res.status(500).json({ success: false, error: 'Error uploading file' })
+    })
+
+    uploadStream.on('finish', () => {
+      client.close()
+      res.json({ success: true, fileId: uploadStream.id })
+    })
+  } catch (error) {
+    console.error('Error uploading file:', error)
+    res.status(500).json({ success: false, error: 'Error uploading file' })
+  }
+}
 
 const getProducts = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
@@ -149,4 +186,5 @@ module.exports = {
   postProduct,
   putProduct,
   deleteProduct,
+  uploadImageToGridFS,
 }
