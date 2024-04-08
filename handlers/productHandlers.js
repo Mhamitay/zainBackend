@@ -16,12 +16,14 @@ const { CONNECTION_STRING_URI } = process.env.CONNECTION_STRING_Remote
 const getProducts = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db()
+
   const allProduct = await db.collection('Products').find().toArray()
   return res.json({ Product: allProduct, message: 'success' })
 }
 const getProductById = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
-  const db = client.db()
+  const db = client.db('zainStoreDB')
+
   const Product = await db
     .collection('Products')
     .findOne({ _id: req.params.id })
