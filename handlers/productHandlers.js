@@ -28,7 +28,8 @@ const getProductById = async (req, res) => {
   console.log(req.params.id)
   const product = await db
     .collection('Products')
-    .findOne({ _id: new ObjectId(req.params.id) })
+    .findOne({ catid: req.params.id })
+  //.findOne({ catid: new ObjectId(req.params.id) })
 
   //client.close()  // TODO- check this close function.
   return res.json(product)
