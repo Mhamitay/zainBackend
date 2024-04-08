@@ -25,9 +25,7 @@ const getProductById = async (req, res) => {
   const db = client.db('zainStoreDB')
 
   const productId = req.params.id
-  const product = await db
-    .collection('Products')
-    .findOne({ _id: ObjectId(productId) })
+  const product = await db.collection('Products').findOne({ _id: productId })
 
   //client.close()  // TODO- check this close function.
   return res.json(product)
