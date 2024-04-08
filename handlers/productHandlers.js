@@ -24,15 +24,15 @@ const getProductById = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db('zainStoreDB')
 
-  const productId = req.params.id
   console.log(req.params.id)
-  const product = await db
+  const products = await db
     .collection('Products')
-    .findOne({ catid: req.params.id })
+    .find({ catid: req.params.id })
+    .toArray()
   //.findOne({ catid: new ObjectId(req.params.id) })
 
   //client.close()  // TODO- check this close function.
-  return res.json(product)
+  return res.json(products)
 }
 
 const postProduct = async (req, res) => {
