@@ -105,6 +105,59 @@ const postProduct = async (req, res) => {
   }
   return res.send('File uploaded successfully!')
 }
+
+const postProductFav = async (req, res) => {
+  console.log('---------------------ishere --------------------')
+  console.log(req.body)
+  //console.log(req.params.id)
+  const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
+  const db = client.db('zainStoreDB')
+
+  const favObject = {
+    userID: req.body.userID,
+    tID: 0,
+    IsFav: req.body.IsFav,
+  };
+
+  const filter = { _id: new ObjectId(req.params.id) };
+
+  try {
+    // Check if the favorite record already exists
+    const existingFavorite = await db.collection('Favorites').findOne(filter);
+
+    if (existingFavorite) {
+      // If the favorite exists, update it
+      const updateResult = await db.collection('Favorites').updateOne(filter, { $set: favObject });
+      if (updateResult.modifiedCount === 1) {
+        console.log('Favorite updated successfully');
+        const updatedFavorite = await db.collection('Favorites').findOne(filter);
+        return res.status(200).json({ favorites: updatedFavorite });
+      } else {
+        console.log('Failed to update favorite');
+        return res.status(500).json({ message: 'Failed to update favorite' });
+      }
+    } else {
+      // If the favorite doesn't exist, create it
+      const insertResult = await db.collection('Favorites').insertOne({ ...favObject, ...filter });
+      console.log(insertResult)
+      if (insertResult.acknowledged === true) {
+        console.log('Favorite created successfully');
+        return res.status(200).json({ message: 'Favorite created successfully' });
+      } else {
+        console.log('Failed to create favorite');
+        return res.status(500).json({ message: 'Failed to create favorite' });
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error updating Products' });
+  } finally {
+    // Close the MongoDB client
+    await client.close();
+  }
+}
+
+
 const putProduct = async (req, res) => {
   const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
   const db = client.db('AppDB')
@@ -185,6 +238,7 @@ module.exports = {
   getProductById,
   postProduct,
   putProduct,
+  postProductFav,
   deleteProduct,
   uploadImageToGridFS,
 }
