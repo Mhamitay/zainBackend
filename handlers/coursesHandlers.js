@@ -28,19 +28,18 @@ const getStudentForCourse = async (req, res) => {
       .find()
       .toArray()
 
-      const students = []
-      enrollment.forEach((e)=>{
-       const foundUser =  users.find((u)=> u._id.toString()===e.studentId)
-         if(foundUser){
-          const student ={
-            studentImage:foundUser.image
-          }
-            students.push(student)
-         }
-         
-      })
+    const students = []
+    enrollment.forEach((e) => {
+      const foundUser = users.find((u) => u._id.toString() === e.studentId)
+      if (foundUser) {
+        const student = {
+          studentImage: foundUser.image
+        }
+        students.push(student)
+      }
 
- console.log('students', students)
+    })
+
     return res.json({ students })
   } catch (error) {
     return req.json({ error: true, message: error })

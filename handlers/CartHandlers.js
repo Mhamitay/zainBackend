@@ -35,22 +35,16 @@ const postCart = async (req, res) => {
   const cartItemId = cartObject._id
   const filter = { _id: cartItemId };
 
-  console.log(cartObject)
-  console.log('filteris :' + JSON.stringify(filter))
 
   try {
     // Check if the favorite record already exists
-    console.log('getting item from cart')
     const existingItem = await db.collection('Cart').findOne(filter);
 
     if (existingItem) {
-      console.log('item was found in cart')
       // If the favorite exists, update it
       res.status(400).json({ message: 'item alread in the cart', code: 2 })
     } else {
-      console.log('item not in cart, will be added')
       const cart = await db.collection('Cart').insertOne(cartObject)
-      console.log('item added')
       res.status(200).json({ message: 'An item was added to the cart successfuly.' })
     }
   } catch (err) {
@@ -68,9 +62,7 @@ const deleteCart = async (req, res) => {
   const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
   const db = client.db('zainStoreDB')
 
-  console.log('item about to delete is')
-  console.log(req.params)
-  console.log(req.params._id)
+
   try {
     const result = await db
       .collection('Cart')

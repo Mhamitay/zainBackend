@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 const multer = require('multer')
 
-// const storage = multer.diskStorage({
+// const storage = multer.diskStorage({ //////////////////////////////////
 //   destination: function (req, file, cb) {
 //     cb(null, 'uploads/')
 //   },
@@ -16,6 +16,24 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 //#region EndPoints ..
+
+
+//#region Product
+// Product endpoints
+//------------------------------------
+const {
+  getFav,
+  postFavToggle,
+  deleteFav
+} = require('./handlers/favHandlers')
+
+router.get('/api/fav', getFav)
+router.post('/api/fav', postFavToggle)
+router.delete('/api/fav/:id', deleteFav)
+
+//------------------------------------
+//#endregion
+
 
 
 //#region Product
@@ -50,7 +68,7 @@ router.get('/api/product', getProducts)
 router.get('/api/product/:id', getProductById)
 router.post('/api/product', postProduct)
 router.put('/api/product/:id', putProduct)
-router.post('/api/product/fav/:id', postProductFav)
+router.post('/api/product/fav', postProductFav)
 router.delete('/api/product/:id', deleteProduct)
 router.post('/api/product', upload.single('image'), uploadImageToGridFS)
 

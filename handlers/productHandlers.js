@@ -51,27 +51,44 @@ const uploadImageToGridFS = async (req, res) => {
 }
 
 const getProducts = async (req, res) => {
+  //console.log('allProduct allFav')
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db()
 
   const allProduct = await db.collection('Products').find().toArray()
+  //const allFav = await db.collection('favorites').find().toArray()
+
+  //console.log('allProduct allFav')
+  //console.log(allProduct)
+  //console.log(allFav)
+  allProduct.forEach((p) => {
+
+    // const isfav = allFav.find(f => f._id == p._id)
+    // console.log(p._id + ' = ' + isfav)
+    // isfav === true ? p.isFav = true : p.isFav = false
+
+  })
+  //console.log(allProduct)
   return res.json({ Product: allProduct, message: 'success' })
 }
 const getProductById = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db('zainStoreDB')
 
-  console.log(req.params.id)
-  const products = await db
-    .collection('Products')
-    .find({ catid: req.params.id })
-    .toArray()
-  //.findOne({ catid: new ObjectId(req.params.id) })
+  const products = await db.collection('Products').find({ catid: req.params.id }).toArray()
+  const allFav = await db.collection('favorites').find().toArray()
 
-  //client.close()  // TODO- check this close function.
+  products.forEach((p) => {
+    const result = allFav.find(f => f.product._id === p._id.toString())
+    if (result === undefined) {
+      p.isFav = false
+    } else {
+      p.isFav = true
+    }
+  })
+
   return res.json(products)
 }
-
 const postProduct = async (req, res) => {
   try {
     const client = await MongoClient.connect(
@@ -105,46 +122,36 @@ const postProduct = async (req, res) => {
   }
   return res.send('File uploaded successfully!')
 }
-
 const postProductFav = async (req, res) => {
-  console.log('---------------------ishere --------------------')
-  console.log(req.body)
-  //console.log(req.params.id)
   const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
   const db = client.db('zainStoreDB')
 
   const favObject = {
     userID: req.body.userID,
     tID: 0,
-    IsFav: req.body.IsFav,
+    product: req.body
   };
 
-  const filter = { _id: new ObjectId(req.params.id) };
+  const filter = { _id: new ObjectId(req.body._id) };
 
   try {
     // Check if the favorite record already exists
-    const existingFavorite = await db.collection('Favorites').findOne(filter);
+    const existingFavorite = await db.collection('favorites').findOne(filter);
 
     if (existingFavorite) {
       // If the favorite exists, update it
-      const updateResult = await db.collection('Favorites').updateOne(filter, { $set: favObject });
-      if (updateResult.modifiedCount === 1) {
-        console.log('Favorite updated successfully');
-        const updatedFavorite = await db.collection('Favorites').findOne(filter);
-        return res.status(200).json({ favorites: updatedFavorite });
-      } else {
-        console.log('Failed to update favorite');
-        return res.status(500).json({ message: 'Failed to update favorite' });
-      }
+      //const updateResult = await db.collection('favorites').updateOne(filter, { $set: favObject });
+
+      const deleteFavorite = await db.collection('favorites').deleteOne(filter);
+
+      return res.json(req.body)
+
     } else {
       // If the favorite doesn't exist, create it
-      const insertResult = await db.collection('Favorites').insertOne({ ...favObject, ...filter });
-      console.log(insertResult)
+      const insertResult = await db.collection('favorites').insertOne({ ...favObject, ...filter });
       if (insertResult.acknowledged === true) {
-        console.log('Favorite created successfully');
-        return res.status(200).json({ message: 'Favorite created successfully' });
+        return res.json(req.body)
       } else {
-        console.log('Failed to create favorite');
         return res.status(500).json({ message: 'Failed to create favorite' });
       }
     }
