@@ -56,6 +56,7 @@ router.delete('/api/Cart/:id', deleteCart)
 //------------------------------------
 const {
   getProducts,
+  getProductsMostrequested,
   getProductById,
   postProduct,
   putProduct,
@@ -65,6 +66,7 @@ const {
 } = require('./handlers/productHandlers')
 
 router.get('/api/product', getProducts)
+router.get('/api/product/mostrequested', getProductsMostrequested)
 router.get('/api/product/:id', getProductById)
 router.post('/api/product', postProduct)
 router.put('/api/product/:id', putProduct)

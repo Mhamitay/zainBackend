@@ -14,6 +14,22 @@ const options = {
 
 const { CONNECTION_STRING_URI } = process.env.CONNECTION_STRING_Remote
 
+function getRandomItems(list, count) {
+  const randomItems = []
+  const listLength = list.length
+  if (count >= listLength) {
+    return list // If count is greater or equal to the length of the list, return the whole list
+  }
+  while (randomItems.length < count) {
+    const randomIndex = Math.floor(Math.random() * listLength)
+    const randomItem = list[randomIndex]
+    if (!randomItems.includes(randomItem)) {
+      randomItems.push(randomItem)
+    }
+  }
+  return randomItems
+}
+
 const uploadImageToGridFS = async (req, res) => {
   try {
     // Connect to MongoDB
@@ -62,24 +78,39 @@ const getProducts = async (req, res) => {
   //console.log(allProduct)
   //console.log(allFav)
   allProduct.forEach((p) => {
-
     // const isfav = allFav.find(f => f._id == p._id)
     // console.log(p._id + ' = ' + isfav)
     // isfav === true ? p.isFav = true : p.isFav = false
-
   })
   //console.log(allProduct)
   return res.json({ Product: allProduct, message: 'success' })
 }
+
+const getProductsMostrequested = async (req, res) => {
+  //console.log('allProduct allFav')
+  const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
+  const db = client.db()
+
+  const allProduct = await db.collection('Products').find().toArray()
+  //const allFav = await db.collection('favorites').find().toArray()
+
+  const randomItems = getRandomItems(allProduct, 4)
+
+  return res.json({ Product: randomItems, message: 'success' })
+}
+
 const getProductById = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db('zainStoreDB')
 
-  const products = await db.collection('Products').find({ catid: req.params.id }).toArray()
+  const products = await db
+    .collection('Products')
+    .find({ catid: req.params.id })
+    .toArray()
   const allFav = await db.collection('favorites').find().toArray()
 
   products.forEach((p) => {
-    const result = allFav.find(f => f.product._id === p._id.toString())
+    const result = allFav.find((f) => f.product._id === p._id.toString())
     if (result === undefined) {
       p.isFav = false
     } else {
@@ -89,6 +120,7 @@ const getProductById = async (req, res) => {
 
   return res.json(products)
 }
+
 const postProduct = async (req, res) => {
   try {
     const client = await MongoClient.connect(
@@ -122,6 +154,7 @@ const postProduct = async (req, res) => {
   }
   return res.send('File uploaded successfully!')
 }
+
 const postProductFav = async (req, res) => {
   const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
   const db = client.db('zainStoreDB')
@@ -129,41 +162,41 @@ const postProductFav = async (req, res) => {
   const favObject = {
     userID: req.body.userID,
     tID: 0,
-    product: req.body
-  };
+    product: req.body,
+  }
 
-  const filter = { _id: new ObjectId(req.body._id) };
+  const filter = { _id: new ObjectId(req.body._id) }
 
   try {
     // Check if the favorite record already exists
-    const existingFavorite = await db.collection('favorites').findOne(filter);
+    const existingFavorite = await db.collection('favorites').findOne(filter)
 
     if (existingFavorite) {
       // If the favorite exists, update it
       //const updateResult = await db.collection('favorites').updateOne(filter, { $set: favObject });
 
-      const deleteFavorite = await db.collection('favorites').deleteOne(filter);
+      const deleteFavorite = await db.collection('favorites').deleteOne(filter)
 
       return res.json(req.body)
-
     } else {
       // If the favorite doesn't exist, create it
-      const insertResult = await db.collection('favorites').insertOne({ ...favObject, ...filter });
+      const insertResult = await db
+        .collection('favorites')
+        .insertOne({ ...favObject, ...filter })
       if (insertResult.acknowledged === true) {
         return res.json(req.body)
       } else {
-        return res.status(500).json({ message: 'Failed to create favorite' });
+        return res.status(500).json({ message: 'Failed to create favorite' })
       }
     }
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error updating Products' });
+    console.error(err)
+    res.status(500).json({ message: 'Error updating Products' })
   } finally {
     // Close the MongoDB client
-    await client.close();
+    await client.close()
   }
 }
-
 
 const putProduct = async (req, res) => {
   const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
@@ -218,6 +251,7 @@ const putProduct = async (req, res) => {
     res.status(500).json({ message: 'Error updating Products' })
   }
 }
+
 const deleteProduct = async (req, res) => {
   try {
     const client = await MongoClient.connect(
@@ -242,6 +276,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   getProducts,
+  getProductsMostrequested,
   getProductById,
   postProduct,
   putProduct,
