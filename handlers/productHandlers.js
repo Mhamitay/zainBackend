@@ -96,7 +96,7 @@ const getProductsMostrequested = async (req, res) => {
 
   const randomItems = getRandomItems(allProduct, 4)
 
-  return res.json({ Product: randomItems, message: 'success' })
+  return res.json({ data: randomItems, message: 'success' })
 }
 
 const getProductById = async (req, res) => {
