@@ -14,19 +14,19 @@ const getOrders = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db()
 
-  const allProduct = await db.collection('Products').find().toArray()
+  const allOrders = await db.collection('Orders').find().toArray()
   //const allFav = await db.collection('favorites').find().toArray()
 
   //console.log('allProduct allFav')
   //console.log(allProduct)
   //console.log(allFav)
   //allProduct.forEach((p) => {
-    // const isfav = allFav.find(f => f._id == p._id)
-    // console.log(p._id + ' = ' + isfav)
-    // isfav === true ? p.isFav = true : p.isFav = false
+  // const isfav = allFav.find(f => f._id == p._id)
+  // console.log(p._id + ' = ' + isfav)
+  // isfav === true ? p.isFav = true : p.isFav = false
   //})
   //console.log(allProduct)
-  return res.json({ Orders: allProduct, message: 'success - list of orders' })
+  return res.json({ Orders: allOrders, message: 'success - list of orders' })
 }
 
 const getOrderById = async (req, res) => {
