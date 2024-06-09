@@ -20,13 +20,13 @@ const getOrders = async (req, res) => {
   //console.log('allProduct allFav')
   //console.log(allProduct)
   //console.log(allFav)
-  allProduct.forEach((p) => {
+  //allProduct.forEach((p) => {
     // const isfav = allFav.find(f => f._id == p._id)
     // console.log(p._id + ' = ' + isfav)
     // isfav === true ? p.isFav = true : p.isFav = false
-  })
+  //})
   //console.log(allProduct)
-  return res.json({ Product: allProduct, message: 'success' })
+  return res.json({ Orders: allProduct, message: 'success - list of orders' })
 }
 
 const getOrderById = async (req, res) => {
