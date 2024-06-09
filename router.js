@@ -36,6 +36,19 @@ router.delete('/api/fav/:id', deleteFav)
 
 
 
+const {
+  getOrders,
+  getOrderById,
+  postOrder,
+  deleteOrder,
+} = require('./handlers/OrderHandlers')
+
+router.get('/api/Orders', getOrders)
+router.post('/api/Order', postOrder)
+router.post('/api/Orders/:id', getOrderById)
+router.post('/api/Order', deleteOrder)
+
+
 //#region Product
 // Product endpoints
 //------------------------------------
