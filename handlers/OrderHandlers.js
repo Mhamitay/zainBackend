@@ -53,11 +53,13 @@ const getOrderById = async (req, res) => {
 
 const postOrder = async (req, res) => {
   try {
-    
-    const client = new MongoClient(process.env.CONNECTION_STRING_Remote, options)
-    const db = client.db('AppDB')
-    
+
+
+    const client = await MongoClient.connect(
+      process.env.CONNECTION_STRING_Remote
+    )
     const db = client.db()
+    
     const result = await db.collection('Orders').insertOne(req.body)
 
   } catch (error) {
