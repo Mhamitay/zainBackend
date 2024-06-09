@@ -62,20 +62,17 @@ const getOrderById = async (req, res) => {
 }
 
 const postOrder = async (req, res) => {
+  const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
+  const db = client.db()
   try {
-
-
-    const client = await MongoClient.connect(
-      process.env.CONNECTION_STRING_Remote
-    )
-    const db = client.db()
-    
     const result = await db.collection('Orders').insertOne(req.body)
-
+    return res
+      .status(200)
+      .json({ status: 'Success', Message: 'Order was saved successfuly.' })
   } catch (error) {
     console.log('error ', error)
+    return res.send('File uploaded successfully!')
   }
-  return res.send('File uploaded successfully!')
 }
 
 const deleteOrder = async (req, res) => {
