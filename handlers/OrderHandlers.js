@@ -26,7 +26,9 @@ const getOrders = async (req, res) => {
   // isfav === true ? p.isFav = true : p.isFav = false
   //})
   //console.log(allProduct)
-  return res.json({ Orders: allOrders, message: 'success - list of orders' })
+  return res
+    .status(200)
+    .json({ Orders: allOrders, message: 'success - list of orders' })
 }
 
 const getOrderById = async (req, res) => {
