@@ -14,7 +14,17 @@ const getOrders = async (req, res) => {
   const client = await MongoClient.connect(process.env.CONNECTION_STRING_Remote)
   const db = client.db()
 
-  const allOrders = await db.collection('Orders').find().toArray()
+  try {
+    const allOrders = await db.collection('Orders').find().toArray()
+    return res
+      .status(200)
+      .json({ Orders: allOrders, message: 'success - list of orders' })
+  } catch (error) {
+    console.log('error ', error)
+    return res
+      .status(500)
+      .json({ error: error, message: 'internal server error' })
+  }
   //const allFav = await db.collection('favorites').find().toArray()
 
   //console.log('allProduct allFav')
@@ -26,9 +36,7 @@ const getOrders = async (req, res) => {
   // isfav === true ? p.isFav = true : p.isFav = false
   //})
   //console.log(allProduct)
-  return res
-    .status(200)
-    .json({ Orders: allOrders, message: 'success - list of orders' })
+
 }
 
 const getOrderById = async (req, res) => {
